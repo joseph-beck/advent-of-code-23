@@ -1,30 +1,76 @@
 # frozen_string_literal: true
 
 def part_one(data)
-  0
+  games = 0
+
+  data.each_with_index do |line, i|
+    clean = line.sub("Game #{i + 1}:", '').split(';')
+    r, g, b = [], [], []
+
+    clean.each do |group|
+      sections = group.gsub(/\s+/, '').split(',')
+
+      sections.each do |section|
+        r << section.gsub(/\D/, '').to_i if section.include? 'red'
+        g << section.gsub(/\D/, '').to_i if section.include? 'green'
+        b << section.gsub(/\D/, '').to_i if section.include? 'blue'
+      end
+    end
+
+    next if (r.max > 12) || (g.max > 13) || (b.max > 14)
+
+    games += i + 1
+  end
+
+  games
 end
 
 def part_two(data)
-  0
+  sum = 0
+
+  data.each_with_index do |line, i|
+    clean = line.sub("Game #{i + 1}:", '').split(';')
+    r, g, b = [], [], []
+
+    clean.each do |group|
+      sections = group.gsub(/\s+/, '').split(',')
+
+      sections.each do |section|
+        r << section.gsub(/\D/, '').to_i if section.include? 'red'
+        g << section.gsub(/\D/, '').to_i if section.include? 'green'
+        b << section.gsub(/\D/, '').to_i if section.include? 'blue'
+      end
+    end
+
+    sum += r.max * g.max * b.max
+  end
+
+  sum
 end
 
 def test_part_one
-  input = %w[]
+  input = File.read('ex1.txt').split("\n")
   ans = part_one input
-  raise 'part one wrong' unless ans == 0
+  puts ans
+  raise 'part one wrong' unless ans == 8
 end
 
 def test_part_two
-  input = %w[]
+  input = File.read('ex1.txt').split("\n")
   ans = part_two input
-  raise 'part two wrong' unless ans == 0
+  puts ans
+  raise 'part two wrong' unless ans == 2286
 end
 
 if __FILE__ == $PROGRAM_NAME
   file_data = File.read('in.txt').split("\n")
 
+  puts '===== PART ONE ====='
+
   puts part_one file_data
   test_part_one
+
+  puts '===== PART TWO ====='
 
   puts part_two file_data
   test_part_two
