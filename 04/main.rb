@@ -8,11 +8,7 @@ def part_one(data)
     _, winners, cards = line.match(/^Card\s+(\d+):\s+(.*?)\s+\|\s+(.*)\z/)&.captures
     cards = cards.split.map(&:to_i).to_set
     points = winners.split.map(&:to_i).reduce(0) do |p, number|
-      if cards.include? number
-        p.positive? ? p * 2 : 1
-      else
-        p
-      end
+      cards.include?(number) ? (p.positive? ? p * 2 : 1) : p
     end
 
     points_sum += points
@@ -22,17 +18,13 @@ def part_one(data)
 end
 
 def part_two(data)
-  counts = Array.new(data.length + 1, 0)
-  count_sum = 0
+  counts, count_sum = Array.new(data.length + 1, 0), 0
 
   data.each_with_index do |line, i|
     # i had a thing that did the same thing but gave a different answer i dont even know at this point
     _, winners, cards = line.match(/^Card\s+(\d+):\s+(.*?)\s+\|\s+(.*)\z/)&.captures
-    count = (counts[i + 1] += 1)
+    count, winners_count, cards = (counts[i + 1] += 1), 0, cards.split.map(&:to_i).to_set
     count_sum += count
-
-    winners_count = 0
-    cards = cards.split.map(&:to_i).to_set
 
     winners.split.map(&:to_i).reduce(0) do |_, number|
       if cards.include? number
